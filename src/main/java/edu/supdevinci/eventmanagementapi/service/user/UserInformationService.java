@@ -4,6 +4,7 @@ import edu.supdevinci.eventmanagementapi.exception.UserNotFoundException;
 import edu.supdevinci.eventmanagementapi.model.database.User;
 import edu.supdevinci.eventmanagementapi.model.request.auth.SignupRequest;
 import edu.supdevinci.eventmanagementapi.repository.UserRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +40,7 @@ public class UserInformationService implements UserService {
     }
 
     @Override
+    @Cacheable(value = "users", key = "#email")
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }

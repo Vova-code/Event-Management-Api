@@ -6,7 +6,6 @@ import edu.supdevinci.eventmanagementapi.service.user.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,11 +41,6 @@ public class UserAuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<String> registerUser(@Valid @RequestBody SignupRequest signupRequest, HttpServletResponse response) {
-        String a = signupRequest.email();
-        if(userService.existsByEmail(signupRequest.email())) {
-            return ResponseEntity.badRequest().body("Email already exists");
-        }
-
         var user = userService.register(signupRequest);
 
         authenticateUser(response, user.getEmail(), signupRequest.password());
