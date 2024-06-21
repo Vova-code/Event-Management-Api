@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface ParticipationServicePort {
 
-    Participation save(ParticipationDto participationDto);
+    Participation create(ParticipationDto participationDto);
 
     Optional<Participation> findById(Long id);
 

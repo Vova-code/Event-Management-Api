@@ -3,6 +3,7 @@ package edu.supdevinci.eventmanagementapi.controller;
 import edu.supdevinci.eventmanagementapi.dto.ParticipationDto;
 import edu.supdevinci.eventmanagementapi.model.database.Participation;
 import edu.supdevinci.eventmanagementapi.service.participation.ParticipationService;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +21,10 @@ public class ParticipationController {
         this.participationService = participationService;
     }
 
+
     @PostMapping
     public ResponseEntity<Participation> createParticipation(@RequestBody ParticipationDto participationDto) {
-        Participation createdParticipation = participationService.save(participationDto);
-        return ResponseEntity.ok(createdParticipation);
+        return ResponseEntity.ok(participationService.create(participationDto));
     }
 
     @GetMapping("/{id}")

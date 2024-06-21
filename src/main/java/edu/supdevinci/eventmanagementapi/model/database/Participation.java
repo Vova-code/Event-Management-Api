@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 import java.util.Date;
 
@@ -14,6 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder(setterPrefix = "with", toBuilder = true)
 @Table(name = "participation")
+@BatchSize(size = 10)
 public class Participation {
 
     @Id
@@ -21,11 +23,11 @@ public class Participation {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id", nullable = false)
+    @JoinColumn(name = "event_id")
     private Event event;
 
     @Column(name = "is_confirmed", nullable = false)

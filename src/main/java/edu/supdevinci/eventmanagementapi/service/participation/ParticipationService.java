@@ -5,6 +5,8 @@ import edu.supdevinci.eventmanagementapi.model.database.Participation;
 import edu.supdevinci.eventmanagementapi.repository.ParticipationRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -21,17 +23,18 @@ public class ParticipationService implements ParticipationServicePort {
         this.participationRepository = participationRepository;
     }
 
+    @CacheEvict(value = "participations", allEntries = true)
     @Override
-    public Participation save(ParticipationDto participationDto) {
-        Participation participation = new Participation();
-        BeanUtils.copyProperties(participationDto, participation);
-
-        // Set current timestamp for createdAt
-        participation.setCreatedAt(new Date());
+    public Participation create(ParticipationDto participationDto) {
+        Participation participation = Participation
+                .builder()
+                .withIsConfirmed(participationDto.getIsConfirmed())
+                .withMessage(participationDto.getMessage())
+                .withCreatedAt(new Date())
+                .build();
 
         return participationRepository.save(participation);
     }
-
     @Override
     public List<Participation> findAll() {
         return participationRepository.findAll();
@@ -42,6 +45,7 @@ public class ParticipationService implements ParticipationServicePort {
         return participationRepository.findById(id);
     }
 
+    @Cacheable(value = "events", key = "#id")
     @Override
     public void deleteById(Long id) {
         participationRepository.deleteById(id);
@@ -57,6 +61,7 @@ public class ParticipationService implements ParticipationServicePort {
         return participationRepository.findByEventId(eventId);
     }
 
+    @Cacheable(value = "participations", key = "#id")
     @Override
     public boolean existsById(Long id) {
         return participationRepository.existsById(id);
