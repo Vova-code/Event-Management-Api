@@ -42,6 +42,11 @@ public class UserAuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<String> registerUser(@Valid @RequestBody SignupRequest signupRequest, HttpServletResponse response) {
+        String a = signupRequest.email();
+        if(userService.existsByEmail(signupRequest.email())) {
+            return ResponseEntity.badRequest().body("Email already exists");
+        }
+
         var user = userService.register(signupRequest);
 
         authenticateUser(response, user.getEmail(), signupRequest.password());
