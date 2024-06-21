@@ -1,7 +1,9 @@
 package edu.supdevinci.eventmanagementapi.controller;
 
+import edu.supdevinci.eventmanagementapi.dto.ParticipationDto;
 import edu.supdevinci.eventmanagementapi.model.database.Participation;
 import edu.supdevinci.eventmanagementapi.service.participation.ParticipationService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,21 +21,27 @@ public class ParticipationController {
     }
 
     @PostMapping
-    public ResponseEntity<Participation> createParticipation(@RequestBody Participation participation) {
-        Participation savedParticipation = participationService.save(participation);
-        return ResponseEntity.ok(savedParticipation);
+    public ResponseEntity<Participation> createParticipation(@RequestBody ParticipationDto participationDto) {
+        Participation createdParticipation = participationService.save(participationDto);
+        return ResponseEntity.ok(createdParticipation);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Participation> getParticipationById(@PathVariable Long id) {
-        Optional<Participation> participation = participationService.findById(id);
-        return participation.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        Optional<Participation> participationOptional = participationService.findById(id);
+        return participationOptional
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping
-    public ResponseEntity<List<Participation>> getAllParticipations() {
-        List<Participation> participations = participationService.findAll();
-        return ResponseEntity.ok(participations);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteParticipation(@PathVariable Long id) {
+        if (participationService.existsById(id)) {
+            participationService.deleteById(id);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/user/{userId}")
@@ -46,11 +54,5 @@ public class ParticipationController {
     public ResponseEntity<List<Participation>> getParticipationsByEventId(@PathVariable Long eventId) {
         List<Participation> participations = participationService.findByEventId(eventId);
         return ResponseEntity.ok(participations);
-    }
-
-    @GetMapping("/exists/{id}")
-    public ResponseEntity<Boolean> existsParticipationById(@PathVariable Long id) {
-        boolean exists = participationService.existsById(id);
-        return ResponseEntity.ok(exists);
     }
 }
