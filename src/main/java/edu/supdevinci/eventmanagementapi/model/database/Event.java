@@ -1,6 +1,8 @@
 package edu.supdevinci.eventmanagementapi.model.database;
 
+import edu.supdevinci.eventmanagementapi.dto.EventDto;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -13,6 +15,7 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder(setterPrefix = "with", toBuilder = true)
 @Table(name = "event")
 public class Event {
 
@@ -31,9 +34,6 @@ public class Event {
 
     @Column(name = "date", nullable = false)
     private Date date;
-
-    @Column(name = "time", nullable = false)
-    private Time time;
 
     @Column(name = "total_places", nullable = false)
     private int totalPlaces;
