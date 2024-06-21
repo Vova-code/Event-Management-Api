@@ -3,6 +3,8 @@ package edu.supdevinci.eventmanagementapi.controller;
 import edu.supdevinci.eventmanagementapi.dto.EventDto;
 import edu.supdevinci.eventmanagementapi.model.database.Event;
 import edu.supdevinci.eventmanagementapi.service.event.EventService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +23,9 @@ public class EventController  {
     }
 
     @GetMapping
-    public ResponseEntity<List<Event>> getEvents() {
-        return ResponseEntity.ok(eventService.findAll());
+    public ResponseEntity<List<Event>> getEvents(@RequestParam Integer page, @RequestParam Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(eventService.findAll(pageable));
     }
 
     @GetMapping("/{id}")

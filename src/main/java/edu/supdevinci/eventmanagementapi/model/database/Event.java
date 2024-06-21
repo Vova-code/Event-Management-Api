@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 import java.util.Date;
 import java.sql.Time;
@@ -17,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder(setterPrefix = "with", toBuilder = true)
 @Table(name = "event")
+@BatchSize(size = 10)
 public class Event {
 
     @Id
